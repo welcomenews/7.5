@@ -1,0 +1,16 @@
+Vagrant.configure("2") do |config|
+
+  config.vm.provider :virtualbox do |v|
+    v.memory = 1048
+  end
+  config.vm.define "reactjsserver" do |db|
+    db.vm.box = "ubuntu/xenial32"
+    db.vm.hostname = "reactjsserver"
+    db.vm.network :private_network, ip: "10.10.10.10"
+    db.vm.provision "ansible" do |ansible|
+        ansible.playbook = "ansible/reactjs.yaml"
+        ansible.become = true
+    end
+  end
+  config.vm.synced_folder "../skillbox-deploy-blue-green/", "/var/www/releases/local", create: true
+end
